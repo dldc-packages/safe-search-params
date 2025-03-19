@@ -1,6 +1,6 @@
 {
   "name": "@dldc/safe-search-params",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "exports": "./mod.ts",
   "imports": {
     "@dldc/erreur": "jsr:@dldc/erreur@^7.1.1",
@@ -16,6 +16,10 @@
     "test:coverage": "deno test -A --coverage=coverage && deno coverage coverage --html"
   },
   "lint": {
-    "rules": { "exclude": ["no-explicit-any"] }
+    "rules": {
+      "exclude": [
+        "no-explicit-any"
+      ]
+    }
   }
 }
