@@ -26,6 +26,7 @@ export function safeSearchParams(
     getOrThrow,
     has,
     getObj,
+    getObjStrict,
     getObjOrThrow,
     append,
     set,
@@ -71,6 +72,20 @@ export function safeSearchParams(
       output[name] = value;
     }
     return output as TDtObjOutput<Obj>;
+  }
+
+  function getObjStrict<Obj extends TDtObjBase>(
+    obj: Obj,
+  ): TDtObjOutputStrict<Obj> | null {
+    const output: Record<string, any> = {};
+    for (const [name, type] of Object.entries(obj)) {
+      const parsed = getInternal(name, type);
+      if (parsed.valid === false) {
+        return null;
+      }
+      output[name] = parsed.value;
+    }
+    return output as TDtObjOutputStrict<Obj>;
   }
 
   function getObjOrThrow<Obj extends TDtObjBase>(

@@ -24,6 +24,32 @@ Deno.test("Obj", () => {
   expect(obj).toEqual({ a: 1, b: 2, c: "hey" });
 });
 
+Deno.test("ObjStrict", () => {
+  const params = safeSearchParams("a=1&b=2&c=hey");
+  const obj = params.getObjStrict({
+    a: rInteger(),
+    b: rInteger(),
+    c: rString(),
+  });
+  expect(obj).toEqual({ a: 1, b: 2, c: "hey" });
+
+  const missing = params.getObjStrict({
+    a: rInteger(),
+    b: rInteger(),
+    d: rString(),
+  });
+  expect(missing).toEqual(
+    { a: 1, b: 2, d: null },
+  );
+
+  const invalid = params.getObjStrict({
+    a: rInteger(),
+    b: rInteger(),
+    c: rInteger(),
+  });
+  expect(invalid).toEqual(null);
+});
+
 Deno.test("Multi", () => {
   const params = safeSearchParams("tag=first&tag=second&tag=third");
   expect(params.get("tag", rString())).toEqual("first");

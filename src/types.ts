@@ -11,14 +11,24 @@ export interface TDatatype<Out> {
 
 export type TDtObjBase = Record<string, TDatatype<any>>;
 
-export type TDtObjOutput<Obj extends TDtObjBase> = {
-  [K in keyof Obj]: Obj[K] extends TDatatype<infer Out> ? (Out | null)
-    : never;
-};
+/**
+ * Simplify a type by removing the `undefined` type
+ */
+// deno-lint-ignore ban-types
+export type TSimplify<T> = { [KeyType in keyof T]: T[KeyType] } & {};
 
-export type TDtObjOutputStrict<Obj extends TDtObjBase> = {
-  [K in keyof Obj]: Obj[K] extends TDatatype<infer Out> ? (Out) : never;
-};
+export type TDtObjOutput<Obj extends TDtObjBase> = TSimplify<
+  {
+    [K in keyof Obj]: Obj[K] extends TDatatype<infer Out> ? (Out | null)
+      : never;
+  }
+>;
+
+export type TDtObjOutputStrict<Obj extends TDtObjBase> = TSimplify<
+  {
+    [K in keyof Obj]: Obj[K] extends TDatatype<infer Out> ? (Out) : never;
+  }
+>;
 
 export type TReadonlyURLSearchParams = Omit<
   URLSearchParams,
@@ -65,6 +75,14 @@ export interface TSafeSearchParams {
    * @param obj
    */
   getObj<Obj extends TDtObjBase>(obj: Obj): TDtObjOutput<Obj>;
+
+  /**
+   * Get multiple values as the given type, return null if any values are invalid.
+   * @param obj
+   */
+  getObjStrict<Obj extends TDtObjBase>(
+    obj: Obj,
+  ): TDtObjOutputStrict<Obj> | null;
 
   /**
    * Get multiple values as the given type, throwing an error if any values are invalid.

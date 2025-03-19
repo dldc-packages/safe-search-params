@@ -62,6 +62,26 @@ const obj = params.getObj({ a: rInteger(), b: rInteger(), c: rString() });
 console.log(obj); // { a: 1, b: 2, c: "hey" }
 ```
 
+Note that any property that is missing or invalid will be `null` in the object.
+
+### Working with Strict Objects
+
+The `getObjStrict` method is similar to `getObj`, but it will return `null` if
+any value is invalid:
+
+```typescript
+const params = safeSearchParams("a=hey");
+const obj = params.getObjStrict({ a: rString() });
+console.log(obj); // { a: "hey" }
+
+const missing = params.getObjStrict({ b: rString() });
+console.log(missing); // { b: null }
+
+const invalid = params.getObjStrict({ a: rInteger() });
+// a is not an integer
+console.log(invalid); // null
+```
+
 ### Handling Multiple Values
 
 You can handle multiple values for a single parameter:
@@ -177,6 +197,9 @@ function safeSearchParams(
   parameter exists and matches the given type.
 - `getObj<Obj extends TDtObjBase>(obj: Obj): TDtObjOutput<Obj>`: Gets multiple
   values using the given mapping of name and types.
+- `getObjStrict<Obj extends TDtObjBase>(obj: Obj): TDtObjOutputStrict<Obj> | null`:
+  Gets multiple values using the given mapping of name and types, returning
+  `null` if any value is invalid.
 - `getObjOrThrow<Obj extends TDtObjBase>(obj: Obj): TDtObjOutputStrict<Obj>`:
   Gets multiple values as the given type, throwing an error if any values are
   invalid.
