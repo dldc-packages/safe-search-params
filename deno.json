@@ -1,6 +1,6 @@
 {
   "name": "@dldc/safe-search-params",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "exports": "./mod.ts",
   "imports": {
     "@dldc/erreur": "jsr:@dldc/erreur@^7.1.1",
