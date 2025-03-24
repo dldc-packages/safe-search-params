@@ -136,13 +136,8 @@ export function safeSearchParams(
     values: TDtObjOutput<Obj>,
   ): TSafeSearchParams {
     const nextValues: Record<string, string[]> = {};
-    for (const [name, value] of Object.entries(values)) {
-      const type = obj[name];
-      if (type === undefined) {
-        throw new Error(`Type for "${name}" not found in object`);
-      }
-      const serialized = type.serialize(value);
-      nextValues[name] = serialized;
+    for (const [name, type] of Object.entries(obj)) {
+      nextValues[name] = type.serialize(values[name]);
     }
     return setInternal(nextValues);
   }
